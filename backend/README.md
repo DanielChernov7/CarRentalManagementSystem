@@ -1,38 +1,68 @@
 # Car Rental Management System - Backend
 
-FastAPI backend with SQLAlchemy, MySQL, and JWT authentication.
+FastAPI backend with SQLAlchemy, PostgreSQL, and JWT authentication.
 
 ## Quick Start
 
-1. Create and activate virtual environment:
+### 1. Start PostgreSQL Database
+
+From project root:
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+docker-compose up -d
 ```
 
-2. Install dependencies:
+This starts PostgreSQL on port 5432 with credentials:
+- User: `admin`
+- Password: `admin123`
+- Database: `car_rental_db`
+
+### 2. Set Up Python Environment
+
 ```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Set up database:
-```bash
-mysql -u root -p < schema.sql
-mysql -u root -p < seed_data.sql
-```
+### 3. Configure Environment
 
-4. Configure environment:
 ```bash
 cp .env.example .env
-# Edit .env with your settings
 ```
 
-5. Run server:
+Update `.env` if needed (default settings work with docker-compose).
+
+### 4. Run Database Migrations
+
+```bash
+alembic upgrade head
+```
+
+### 5. Seed Database (Optional)
+
+```bash
+python seed.py
+```
+
+This creates test data including:
+- Admin user: `admin@carrental.com` / `password123`
+- Clerk user: `clerk@carrental.com` / `password123`
+- Customer: `john.doe@email.com` / `password123`
+
+### 6. Start Server
+
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Visit http://localhost:8000/docs for interactive API documentation.
+Server runs on http://localhost:8000
+
+## API Documentation
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
 
 ## Project Structure
 
@@ -81,8 +111,38 @@ All models implement proper OOP principles:
 ## Environment Variables
 
 ```
-DATABASE_URL=mysql+pymysql://root:password@localhost:3306/car_rental_db
-SECRET_KEY=your-secret-key-change-in-production
+DATABASE_URL=postgresql://admin:admin123@localhost:5432/car_rental_db
+SECRET_KEY=your-secret-key-change-this-in-production-min-32-chars
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+## Database Management
+
+### Create New Migration
+```bash
+alembic revision --autogenerate -m "description"
+```
+
+### Apply Migrations
+```bash
+alembic upgrade head
+```
+
+### Rollback Migration
+```bash
+alembic downgrade -1
+```
+
+### Stop Database
+```bash
+docker-compose down
+```
+
+### Reset Database (Warning: Deletes All Data)
+```bash
+docker-compose down -v
+docker-compose up -d
+alembic upgrade head
+python seed.py
 ```

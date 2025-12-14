@@ -33,8 +33,25 @@ class Vehicle(Base):
     license_plate = Column(String(50), unique=True, nullable=False, index=True)
     vin = Column(String(100), unique=True, nullable=False)
     color = Column(String(50))
-    vehicle_type = Column(Enum(VehicleType), nullable=False, index=True)
-    status = Column(Enum(VehicleStatus), default=VehicleStatus.AVAILABLE, nullable=False, index=True)
+    vehicle_type = Column(
+        Enum(
+            VehicleType,
+            name="vehicletype",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        nullable=False,
+        index=True,
+    )
+    status = Column(
+        Enum(
+            VehicleStatus,
+            name="vehiclestatus",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        default=VehicleStatus.AVAILABLE,
+        nullable=False,
+        index=True,
+    )
     mileage = Column(Integer, default=0)
     daily_rate = Column(Float, nullable=False)
     base_location_id = Column(Integer, ForeignKey("locations.id"), nullable=False, index=True)

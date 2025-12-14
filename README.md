@@ -1,6 +1,6 @@
 # Car Rental Management System
 
-A full-stack car rental management system built with FastAPI, SQLAlchemy, MySQL, React, TypeScript, and Tailwind CSS.
+A full-stack car rental management system built with FastAPI, SQLAlchemy, PostgreSQL, React, TypeScript, and Tailwind CSS.
 
 ## Features
 
@@ -21,19 +21,21 @@ A full-stack car rental management system built with FastAPI, SQLAlchemy, MySQL,
 - **Payment processing** integration
 - **Customer dashboard** for managing reservations
 
-### Database (MySQL)
+### Database (PostgreSQL)
 - **8 entity tables** with proper relationships and constraints
+- **Alembic migrations** for version-controlled schema changes
 - **Foreign key constraints** for data integrity
 - **Indexes** for optimized queries
 - **Check constraints** to prevent overlapping reservations
-- **Sample seed data** for testing
+- **Python seed script** for test data
 
 ## Tech Stack
 
 ### Backend
 - FastAPI 0.115.5
 - SQLAlchemy 2.0.36
-- MySQL (via PyMySQL)
+- PostgreSQL 16 (via psycopg2)
+- Alembic 1.14.0 (database migrations)
 - Pydantic 2.10.3
 - JWT (python-jose)
 - Bcrypt (passlib)
@@ -165,46 +167,36 @@ CarRentalManagementSystem/
 ### Prerequisites
 - Python 3.9+
 - Node.js 18+
-- MySQL 8.0+
+- Docker & Docker Compose
 
 ### Backend Setup
 
-1. Navigate to backend directory:
+1. Start PostgreSQL database (from project root):
+```bash
+docker-compose up -d
+```
+
+2. Navigate to backend directory and set up environment:
 ```bash
 cd backend
-```
-
-2. Create virtual environment:
-```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
 pip install -r requirements.txt
 ```
 
-4. Set up MySQL database:
+3. Configure environment:
 ```bash
-# Login to MySQL
-mysql -u root -p
-
-# Create database
-source schema.sql
-
-# Load sample data
-source seed_data.sql
+cp .env.example .env
 ```
 
-5. Configure environment variables:
+4. Run database migrations:
 ```bash
-# Copy example env file
-cp .env.example .env
+alembic upgrade head
+```
 
-# Edit .env with your MySQL credentials
-# DATABASE_URL=mysql+pymysql://root:your_password@localhost:3306/car_rental_db
-# SECRET_KEY=your-secret-key-here
+5. Seed database with test data:
+```bash
+python seed.py
 ```
 
 6. Run the backend server:
@@ -212,8 +204,10 @@ cp .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Backend will be available at http://localhost:8000
-API documentation at http://localhost:8000/docs
+Server runs at http://localhost:8000
+- **API Docs (Swagger)**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
 
 ### Frontend Setup
 

@@ -23,7 +23,7 @@ class ReservationBase(BaseModel):
 
 
 class ReservationCreate(ReservationBase):
-    customer_id: int
+    customer_id: Optional[int] = None
 
 
 class ReservationUpdate(BaseModel):

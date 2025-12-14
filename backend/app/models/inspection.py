@@ -25,8 +25,23 @@ class Inspection(Base):
     vehicle_id = Column(Integer, ForeignKey("vehicles.id"), nullable=False, index=True)
     clerk_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
 
-    inspection_type = Column(Enum(InspectionType), nullable=False)
-    status = Column(Enum(InspectionStatus), default=InspectionStatus.PENDING, nullable=False)
+    inspection_type = Column(
+        Enum(
+            InspectionType,
+            name="inspectiontype",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        nullable=False,
+    )
+    status = Column(
+        Enum(
+            InspectionStatus,
+            name="inspectionstatus",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        default=InspectionStatus.PENDING,
+        nullable=False,
+    )
 
     # Inspection checklist items
     exterior_condition = Column(String(50))  # excellent, good, fair, poor

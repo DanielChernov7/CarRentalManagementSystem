@@ -35,7 +35,14 @@ export const NewReservation: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (formData.vehicleId && formData.ratePlanId && formData.startDate && formData.endDate) {
+    if (
+      formData.vehicleId &&
+      formData.ratePlanId &&
+      formData.pickupLocationId &&
+      formData.dropoffLocationId &&
+      formData.startDate &&
+      formData.endDate
+    ) {
       calculatePrice();
     }
   }, [formData]);

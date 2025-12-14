@@ -90,6 +90,7 @@ def create_vehicle(
     current_user: User = Depends(get_current_admin)
 ):
     """Create new vehicle (admin only)"""
+    print(f"DEBUG: Received vehicle data: {vehicle.model_dump()}")
     # Check for duplicate license plate or VIN
     existing = db.query(Vehicle).filter(
         (Vehicle.license_plate == vehicle.license_plate) |

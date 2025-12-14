@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { vehiclesAPI, locationsAPI, ratePlansAPI } from '@/api/services';
 import type { Vehicle, Location, RatePlan } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,12 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 
 export const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'vehicles' | 'locations' | 'ratePlans'>('vehicles');
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [ratePlans, setRatePlans] = useState<RatePlan[]>([]);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
     loadData();
@@ -50,6 +50,16 @@ export const AdminDashboard: React.FC = () => {
       loadData();
     } catch (error: any) {
       alert(error.response?.data?.detail || 'Failed to delete');
+    }
+  };
+
+  const handleAddNew = () => {
+    if (activeTab === 'vehicles') {
+      navigate('/admin/vehicles/add');
+    } else if (activeTab === 'locations') {
+      navigate('/admin/locations/add');
+    } else if (activeTab === 'ratePlans') {
+      navigate('/admin/rate-plans/add');
     }
   };
 
@@ -93,7 +103,7 @@ export const AdminDashboard: React.FC = () => {
                 {activeTab === 'ratePlans' && 'Add, edit, or remove rate plans'}
               </CardDescription>
             </div>
-            <Button onClick={() => setShowForm(true)}>Add New</Button>
+            <Button onClick={handleAddNew}>Add New</Button>
           </div>
         </CardHeader>
         <CardContent>

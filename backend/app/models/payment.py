@@ -27,8 +27,24 @@ class Payment(Base):
     id = Column(Integer, primary_key=True, index=True)
     reservation_id = Column(Integer, ForeignKey("reservations.id"), nullable=False, index=True)
     amount = Column(Float, nullable=False)
-    payment_method = Column(Enum(PaymentMethod), nullable=False)
-    status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False, index=True)
+    payment_method = Column(
+        Enum(
+            PaymentMethod,
+            name="paymentmethod",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        nullable=False,
+    )
+    status = Column(
+        Enum(
+            PaymentStatus,
+            name="paymentstatus",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        default=PaymentStatus.PENDING,
+        nullable=False,
+        index=True,
+    )
 
     # Payment details (abstracted)
     transaction_id = Column(String(255), unique=True, index=True)

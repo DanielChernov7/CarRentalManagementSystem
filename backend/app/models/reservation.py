@@ -33,7 +33,16 @@ class Reservation(Base):
     insurance_amount = Column(Float, default=0.0)
     total_price = Column(Float, nullable=False)
 
-    status = Column(Enum(ReservationStatus), default=ReservationStatus.PENDING, nullable=False, index=True)
+    status = Column(
+        Enum(
+            ReservationStatus,
+            name="reservationstatus",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        default=ReservationStatus.PENDING,
+        nullable=False,
+        index=True,
+    )
 
     include_insurance = Column(Boolean, default=False)
     special_requests = Column(String(500))

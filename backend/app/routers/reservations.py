@@ -110,9 +110,16 @@ def create_reservation(
     current_user: User = Depends(get_current_user)
 ):
     """Create new reservation"""
-    # Override customer_id with current user if customer
+    # Set customer_id based on user role
     if current_user.role == UserRole.CUSTOMER:
+        # Customer can only create reservations for themselves
         reservation.customer_id = current_user.id
+    elif not reservation.customer_id:
+        # Admin/Clerk must provide customer_id
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="customer_id is required for admin/clerk users"
+        )
 
     try:
         db_reservation, error = ReservationService.create_reservation(

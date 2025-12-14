@@ -11,6 +11,9 @@ import { NewReservation } from './pages/NewReservation';
 import { Dashboard } from './pages/Dashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { ClerkDashboard } from './pages/ClerkDashboard';
+import { AddVehicle } from './pages/AddVehicle';
+import { AddLocation } from './pages/AddLocation';
+import { AddRatePlan } from './pages/AddRatePlan';
 
 function App() {
   return (
@@ -54,6 +57,33 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/vehicles/add"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AddVehicle />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/locations/add"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AddLocation />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/rate-plans/add"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AddRatePlan />
                 </ProtectedRoute>
               }
             />

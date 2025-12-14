@@ -29,8 +29,24 @@ class DamageReport(Base):
     vehicle_id = Column(Integer, ForeignKey("vehicles.id"), nullable=False, index=True)
 
     damage_description = Column(Text, nullable=False)
-    damage_severity = Column(Enum(DamageSeverity), nullable=False)
-    status = Column(Enum(DamageReportStatus), default=DamageReportStatus.REPORTED, nullable=False, index=True)
+    damage_severity = Column(
+        Enum(
+            DamageSeverity,
+            name="damageseverity",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        nullable=False,
+    )
+    status = Column(
+        Enum(
+            DamageReportStatus,
+            name="damagereportstatus",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        default=DamageReportStatus.REPORTED,
+        nullable=False,
+        index=True,
+    )
 
     estimated_repair_cost = Column(Float, default=0.0)
     actual_repair_cost = Column(Float, nullable=True)
